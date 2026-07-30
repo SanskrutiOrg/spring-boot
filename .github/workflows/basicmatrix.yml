@@ -1,0 +1,21 @@
+name: test-Matrix
+
+on: 
+  push:
+    branches: '*'
+
+jobs:
+  test:
+    runs-on: ubutnu-latest
+    strategy:
+      # max-parallel: 2
+      matrix:
+        node-version: [16, 18, 20]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: install nodejs
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
