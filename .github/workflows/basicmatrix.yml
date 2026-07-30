@@ -1,32 +1,37 @@
 name: test-Matrix
 
-on: 
+on:
   push:
-    branches: '*'
+    branches:
+      - '*'
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
-      # max-parallel: 2
       matrix:
-        os: [ ubuntu-latest, windows-latest]
-        node-version: [16, 18]
+        os:
+          - ubuntu-latest
+          - windows-latest
+        node-version:
+          - 16
+          - 18
         exclude:
           - os: windows-latest
             node-version: 18
           - os: ubuntu-latest
             node-version: 16
-        include:
-          - os: ubuntu-latest
-            node-version: 18
-          - os: windows-latest
-            node-version: 16
-    steps:
-      - name: checkout
-        uses: actions/checkout@v7
 
-      - name: install nodejs
-        uses: actions/setup-node@v7
+    steps:
+      - name: Enable Git long paths
+        if: runner.os == 'Windows'
+        run: git config --system core.longpaths true
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
